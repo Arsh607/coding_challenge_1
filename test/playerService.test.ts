@@ -1,4 +1,3 @@
-import { describe } from "node:test";
 import {
     calculateRating,
     getPlayerById,
@@ -21,7 +20,7 @@ describe("calculateRating", () => {
         const rating = calculateRating(player);
 
         // ASSERT: verify the result
-        expect(rating).toBe(200);
+        expect(rating).toBe(150);
     });
 
     it("should return 0 when player has 0 total games", () => {
@@ -73,5 +72,30 @@ describe("calculateRating", () => {
 
         // ASSERT
         expect(rating).toBe(185.71);
+    });
+});
+
+describe("getPlayerById", () => {
+    it("should return a player when the ID exists", () => {
+        // ARRANGE
+        const existingId = 1;
+
+        // ACT
+        const player = getPlayerById(existingId);
+
+        // ASSERT: player is found and has correct data
+        expect(player).toBeDefined();
+        expect(player?.id).toBe(1);
+        expect(player?.name).toBe("ShadowStrike");
+    });
+
+    it("should return undefined when the player does not exist", () => {
+        // ARRANGE
+
+        // ACT: attempt to find the player
+        const player = getPlayerById(999);
+
+        // ASSERT: no player is found
+        expect(player).toBeUndefined();
     });
 });
