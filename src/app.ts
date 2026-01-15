@@ -1,45 +1,14 @@
-import express, { Express,Request,Response } from "express";
+import express, { Express, Request, Response } from "express";
+
+import {
+    getAllPlayers,
+    getPlayerById,
+    calculateRating
+} from "./services/playerService";
 
 const app: Express = express();
 
-interface Player {
-    id: number;
-    name: string;
-    wins: number;
-    losses: number;
-    totalScore: number;
-
-}
-
-const players: Player[] = [
-    {
-        id: 1,
-        name: "ShadowStrike",
-        wins: 15,
-        losses: 5,
-        totalScore: 28500
-
-    },
-    {
-        id: 2,
-        name: "NoobMaster",
-        wins: 3,
-        losses: 12,
-        totalScore: 4200
-
-    },
-    {
-        id: 3,
-        name: "ProGamer99",
-        wins: 0,
-        losses: 0,
-        totalScore: 0
-
-    }
-
-]
-
-app.get("/api/v1/health", (req, res) => {
+app.get("/api/v1/health", (req: Request, res: Response) => {
     res.json({
         status: "OK",
         uptime: process.uptime(),
@@ -47,4 +16,42 @@ app.get("/api/v1/health", (req, res) => {
         version: "1.0.0",
     });
 });
+
+app.get("/api/v1/players", (req: Request, res: Response) => {
+    const players = getAllPlayers();
+
+    res.json({
+        players,
+        count: players.length,
+    });
+});
+
+app.get("/api/v1/players/:id", (req: Request<{ id: string }>, res: Response) => {
+    const playerID = parseInt(req.params.id);
+    const player = getPlayerById(playerID);
+
+    if (!player) {
+        return res.status(404).json({ error: "Player not found." });
+    }
+
+    res.json(player);
+});
+
+app.get("/api/v1/players/:id/rating", (req: Request<{ id: string }>, res: Response) => {
+    const playerID = parseInt(req.params.id);
+    const player = getPlayerById(playerID);
+
+    if (!player) {
+        return res.status(404).json({ error: "Player not found." });
+    }
+
+    const rating = calculateRating(player);
+
+    res.json({
+        playerId: player.id,
+        name: player.name,
+        rating
+    });
+});
+
 export default app;
