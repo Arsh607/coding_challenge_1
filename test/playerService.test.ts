@@ -61,17 +61,17 @@ describe("calculateRating", () => {
     it("should round rating to 2 decimal places", () => {
         // ARRANGE
         const player: Player = {
-            id: 4,
-            name: "DecimalGuy",
+            id: 99,
+            name: "TwoDecimalTest",
             wins: 3,
-            losses: 7,
-            totalScore: 1234
+            losses: 4,
+            totalScore: 1000
         };
 
         // ACT
         const rating = calculateRating(player);
 
         // ASSERT
-        expect(rating).toBeCloseTo(153.4, 2);
+        expect(rating).toBe(185.71);
     });
 });
