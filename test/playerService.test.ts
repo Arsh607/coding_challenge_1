@@ -1,0 +1,77 @@
+import { describe } from "node:test";
+import {
+    calculateRating,
+    getPlayerById,
+    Player
+} from "../src/services/playerService";
+
+describe("calculateRating", () => {
+
+    it("should calculate rating for a normal player", () => {
+        // ARRANGE: set up test data
+        const player: Player = {
+            id: 1,
+            name: "TestPlayer",
+            wins: 10,
+            losses: 10,
+            totalScore: 2000
+        };
+
+        // ACT: call the function under test
+        const rating = calculateRating(player);
+
+        // ASSERT: verify the result
+        expect(rating).toBe(200);
+    });
+
+    it("should return 0 when player has 0 total games", () => {
+        // ARRANGE
+        const player: Player = {
+            id: 2,
+            name: "NoGames",
+            wins: 0,
+            losses: 0,
+            totalScore: 0
+        };
+
+        // ACT
+        const rating = calculateRating(player);
+
+        // ASSERT
+        expect(rating).toBe(0);
+    });
+
+    it("should calculate rating correctly when player has only wins", () => {
+        // ARRANGE
+        const player: Player = {
+            id: 3,
+            name: "OnlyWins",
+            wins: 5,
+            losses: 0,
+            totalScore: 500
+        };
+
+        // ACT
+        const rating = calculateRating(player);
+
+        // ASSERT
+        expect(rating).toBe(200);
+    });
+
+    it("should round rating to 2 decimal places", () => {
+        // ARRANGE
+        const player: Player = {
+            id: 4,
+            name: "DecimalGuy",
+            wins: 3,
+            losses: 7,
+            totalScore: 1234
+        };
+
+        // ACT
+        const rating = calculateRating(player);
+
+        // ASSERT
+        expect(rating).toBeCloseTo(153.4, 2);
+    });
+});
